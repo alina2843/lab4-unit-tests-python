@@ -1,0 +1,30 @@
+name: Python CI/CD
+
+# Запускать этот Workflow при каждом "push" в любую ветку
+on: [push]
+
+jobs:
+  build:
+    # Запускаем тесты на двух ОС, как требуется в задании
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    # Используем runner'ы из матрицы
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Шаг 1: Получаем код
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # Шаг 2: Настраиваем Python 3.x
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Шаг 3: Запуск Unit-тестов
+      - name: Run Unit Tests
+        run: python3 -m unittest tests.py
+        working-directory: ./src
